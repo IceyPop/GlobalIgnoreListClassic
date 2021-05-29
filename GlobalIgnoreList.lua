@@ -367,6 +367,7 @@ local function ResetIgnoreDB()
 		openWithFriends	= true,
 		attachFriends   = true,
 		trackChanges	= true,
+		filterMailbox	= false,
 		spamFilter		= true,
 		invertSpam		= true,
 		autoIgnore		= true,
@@ -413,7 +414,9 @@ local function isValidList()
 		end
  			
 		if str == nil or str == UNKNOWN then
-			ShowMsg(format(L["LOAD_5"], found, UNKNOWN))
+			if GlobalIgnoreDB.loginMessages then
+				ShowMsg(format(L["LOAD_5"], found, UNKNOWN))
+			end
 					
 			return false
 		end
@@ -428,7 +431,9 @@ function SyncIgnoreList (silent)
 		silent = false
 	end
 	
-	ShowMsg(L["LOAD_4"])
+	if GlobalIgnoreDB.loginMessages then
+		ShowMsg(L["LOAD_4"])
+	end
 
 	if isValidList() == false then
 		return
@@ -442,7 +447,7 @@ function SyncIgnoreList (silent)
 		local added   = 0
 		local name
 			
-		if (ignores > 0) and (silent == false) then
+		if (ignores > 0) and (silent == false) and GlobalIgnoreDB.loginMessages then
 			ShowMsg(L["LOAD_2"])
 		end
 			
@@ -461,7 +466,7 @@ function SyncIgnoreList (silent)
 						
 						AddToList(name, faction)
 										
-						if silent == false then
+						if silent == false and GlobalIgnoreDB.loginMessages then
 							ShowMsg (format(L["LOAD_3"], name))
 						end
 					end
@@ -641,8 +646,9 @@ local function ApplicationStartup(self)
 	if GIL_Loaded == true or safeToLoad == false then
 		return
 	end
-	
-	ShowMsg(L["LOAD_1"])
+	if GlobalIgnoreDB.loginMessages then
+		ShowMsg(L["LOAD_1"])
+	end
 	
 	-- Set filter defaults
 	
@@ -752,6 +758,10 @@ local function ApplicationStartup(self)
 	
 	if GlobalIgnoreDB.trackChanges == nil then
 		GlobalIgnoreDB.trackChanges = true
+	end
+
+	if GlobalIgnoreDB.filterMailbox == nil then
+		GlobalIgnoreDB.filterMailbox = false
 	end
 	
 	if GlobalIgnoreDB.openWithFriends == nil then
@@ -936,6 +946,46 @@ local function EventHandler (self, event, sender, arg1, ...)
 		end
 		
 		return
+	end
+
+	if (event == "MAIL_INBOX_UPDATE") then
+		if not GlobalIgnoreDB.filterMailbox then
+			return
+		end
+		for index = 1, select(1, GetInboxNumItems()) do
+			_, _, sender, subject, money, CODAmount, _, hasItem, _, _, _, _, isGM = GetInboxHeaderInfo(index)
+			check = true
+			if sender == nil or money > 0 or CODAmount > 0 or hasItem ~= nil or isGM then
+				check = false
+			end
+
+			if check then
+				body = select(1, GetInboxText(index))
+
+				if subject ~= nil then
+					subjectResult, subjectFilterNum = filterComplex(nil, string.lower(subject), nil)
+					if subjectResult == true then
+						DeleteInboxItem(index)
+						GlobalIgnoreDB.filterTotal	      = GlobalIgnoreDB.filterTotal + 1
+						GlobalIgnoreDB.filterCount[subjectFilterNum] = GlobalIgnoreDB.filterCount[subjectFilterNum] + 1
+					end
+				end
+
+				if body ~= nil then
+					bodyResult, bodyFilterNum = filterComplex(nil, string.lower(body))
+					if bodyResult == true then
+						DeleteInboxItem(index)
+						GlobalIgnoreDB.filterTotal	      = GlobalIgnoreDB.filterTotal + 1
+						GlobalIgnoreDB.filterCount[bodyFilterNum] = GlobalIgnoreDB.filterCount[bodyFilterNum] + 1
+					end
+				end
+
+				if subjectResult == true or bodyResult == true then
+					-- C_ReportSystem.OpenReportPlayerDialog(PLAYER_REPORT_TYPE_SPAM, sender, PlayerLocation:CreateFromUnit(sender))
+					-- C_ReportSystem.SetPendingReportTarget(sender)
+				end
+			end
+		end
 	end
 
 	if gotLoaded == true and gotEntering == true then
@@ -2366,6 +2416,8 @@ GILFRAME:RegisterEvent("PARTY_INVITE_REQUEST")
 GILFRAME:RegisterEvent("DUEL_REQUESTED")
 GILFRAME:RegisterEvent("GROUP_ROSTER_UPDATE")
 GILFRAME:RegisterEvent("CHANNEL_INVITE_REQUEST")
+GILFRAME:RegisterEvent("MAIL_SHOW")
+GILFRAME:RegisterEvent("MAIL_INBOX_UPDATE")
 
 SLASH_GIGNORE1		= "/gignore"
 SLASH_GIGNORE2		= "/gi"
