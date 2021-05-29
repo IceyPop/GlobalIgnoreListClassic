@@ -29,7 +29,7 @@ local FilterScrollFrame		= nil
 local FilterScrollButtons	= {}
 local FilterScrollSelect	= 0
 local WINDOW_WIDTH			= 734
-local WINDOW_HEIGHT			= 400
+local WINDOW_HEIGHT			= 435
 local WINDOW_OFFSET			= 113
 local BUTTON_HEIGHT			= 20
 local BUTTON_TOTAL			= math.floor((WINDOW_HEIGHT - WINDOW_OFFSET) / BUTTON_HEIGHT)
@@ -1267,8 +1267,15 @@ local function CreateUIFrames()
 	Text:SetWidth(200)
 	Text:SetText(L["OPT_8"])
 	
-	Button = CreateFrame("CheckButton", "GILFrame3AskNote", Tab3Frame, "UICheckButtonTemplate")	
+	Button = CreateFrame("CheckButton", "GILFrame3LoginMessages", Tab3Frame, "UICheckButtonTemplate")	
 	Button:SetPoint("TOPLEFT", Text, "BOTTOMLEFT", 30, -10)
+	 _G[Button:GetName().."Text"]:SetText(L["OPT_16"])
+	 _G[Button:GetName().."Text"]:SetFontObject("GameFontHighlight")
+	Button:SetScript("OnShow",  function(self) self:SetChecked(GlobalIgnoreDB.loginMessages == true) end)
+	Button:SetScript("OnClick" ,function(self) GlobalIgnoreDB.loginMessages = (self:GetChecked() or false) end) 
+	
+	Button = CreateFrame("CheckButton", "GILFrame3AskNote", Tab3Frame, "UICheckButtonTemplate")	
+	Button:SetPoint("TOPLEFT", GILFrame3LoginMessages, "BOTTOMLEFT", 0, 6)
 	 _G[Button:GetName().."Text"]:SetText(L["OPT_1"])
 	 _G[Button:GetName().."Text"]:SetFontObject("GameFontHighlight")
 	Button:SetScript("OnShow",  function(self) self:SetChecked(GlobalIgnoreDB.asknote == true) end)
@@ -1295,8 +1302,15 @@ local function CreateUIFrames()
 	Button:SetScript("OnShow",  function(self) self:SetChecked(GlobalIgnoreDB.trackChanges == true) end)
 	Button:SetScript("OnClick" ,function(self) GlobalIgnoreDB.trackChanges = (self:GetChecked() or false) end) 
 
+	Button = CreateFrame("CheckButton", "GILFrame3FilterMailbox", Tab3Frame, "UICheckButtonTemplate")	
+	Button:SetPoint("TOPLEFT", GILFrame3TrackChanges, "BOTTOMLEFT", 0, 6)
+	 _G[Button:GetName().."Text"]:SetText(L["OPT_15"])
+	 _G[Button:GetName().."Text"]:SetFontObject("GameFontHighlight")
+	Button:SetScript("OnShow",  function(self) self:SetChecked(GlobalIgnoreDB.filterMailbox == true) end)
+	Button:SetScript("OnClick" ,function(self) GlobalIgnoreDB.filterMailbox = (self:GetChecked() or false) end) 
+
 	Button = Tab3Frame:CreateFontString("GILFrame3ExpText", "OVERLAY", "GameFontHighlight")
-	Button:SetPoint("TOPLEFT", GILFrame3TrackChanges, "BOTTOMLEFT", 6, -4)
+	Button:SetPoint("TOPLEFT", GILFrame3FilterMailbox, "BOTTOMLEFT", 6, -4)
 	Button:SetText(L["OPT_5"])
 
 	Button = CreateFrame("EditBox", "GILFrame3Exp", Tab3Frame, "InputBoxTemplate")
