@@ -32,7 +32,7 @@ Menu.ModifyMenu("MENU_UNIT_PLAYER", function(owner, menuButton, contextData)
 	local unit = contextData.unit
 	local which = contextData.which
 	
-    	if (which and (which == "FRIEND")) then
+	if (which and (which == "FRIEND")) then
 
 		local info = UIDropDownMenu_CreateInfo()
 				
@@ -100,7 +100,7 @@ Menu.ModifyMenu("MENU_UNIT_PLAYER", function(owner, menuButton, contextData)
 		info.text = L["RCM_5"]
 		info.dist = 0
 		info.notCheckable = 1
-	        menuButton:CreateButton(info.text, info.func)
+		menuButton:CreateButton(info.text, info.func)
 	end
 end)
 
