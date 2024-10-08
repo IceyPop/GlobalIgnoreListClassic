@@ -28,16 +28,15 @@ end
 
 --table.remove(UnitPopupMenus["FRIEND"], getButtonElement(UnitPopupMenus["FRIEND"], "IGNORE"))
 
-local function GilUnitMenu (dropdownMenu, which, unit, name, userData, ...)
-
-	if (UIDROPDOWNMENU_MENU_LEVEL > 1) then
-		return
-	end
+Menu.ModifyMenu("MENU_UNIT_PLAYER", function(owner, menuButton, contextData)
+	local unit = contextData.unit
+	local which = contextData.which
 	
-	if (which and (which == "FRIEND")) then
+    	if (which and (which == "FRIEND")) then
 
 		local info = UIDropDownMenu_CreateInfo()
 				
+		info.dist = 0
 		info.notCheckable = 1	
 		info.func = function() C_FriendList.AddOrDelIgnore(addServer(name)) GILUpdateUI(true) end
 			
@@ -46,8 +45,8 @@ local function GilUnitMenu (dropdownMenu, which, unit, name, userData, ...)
 		else
 			info.text = L["RCM_6"]
 		end	
-	
-		UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL)
+				
+		menuButton:CreateButton(info.text, info.func)
 		
 	elseif (which and (which == "PLAYER" or which == "RAID_PLAYER" or which == "PARTY" or which == "TARGET")) then
 		
@@ -63,16 +62,16 @@ local function GilUnitMenu (dropdownMenu, which, unit, name, userData, ...)
 		
 		target = Proper(target, true)
 		
-		DropDownList1.numButtons = max(0, DropDownList1.numButtons - 1)
-
+		-- DropDownList1.numButtons = max(0, DropDownList1.numButtons - 1)
+	
 		local info = UIDropDownMenu_CreateInfo()
 		info.text = ""
 		info.notCheckable = true
 		info.disabled = true
-		UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL)	
-
+		menuButton:CreateButton(info.text, info.func)
+	
 		local info = UIDropDownMenu_CreateInfo()
-				
+		info.dist = 0
 		info.notCheckable = 1
 		
 		if name and name == RAID_TARGET_ICON then
@@ -83,7 +82,7 @@ local function GilUnitMenu (dropdownMenu, which, unit, name, userData, ...)
 			else
 				info.text = L["RCM_6"]
 			end
-
+	
 		else
 			info.func = function() C_FriendList.AddOrDelIgnore(addServer(target)) GILUpdateUI(true) end
 			
@@ -95,16 +94,15 @@ local function GilUnitMenu (dropdownMenu, which, unit, name, userData, ...)
 			end	
 		end
 		
-		UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL)
+		menuButton:CreateButton(info.text, info.func)
 		
 		local info = UIDropDownMenu_CreateInfo()
 		info.text = L["RCM_5"]
+		info.dist = 0
 		info.notCheckable = 1
-		UIDropDownMenu_AddButton(info, UIDROPDOWNMENU_MENU_LEVEL)
+	        menuButton:CreateButton(info.text, info.func)
 	end
-end
-
-hooksecurefunc("UnitPopup_ShowMenu", GilUnitMenu)
+end)
 
 -----------------------
 -- IGNORE LIST HACKS --
