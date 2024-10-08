@@ -35,8 +35,7 @@ Menu.ModifyMenu("MENU_UNIT_PLAYER", function(owner, menuButton, contextData)
 	if (which and (which == "FRIEND")) then
 
 		local info = UIDropDownMenu_CreateInfo()
-				
-		info.dist = 0
+
 		info.notCheckable = 1	
 		info.func = function() C_FriendList.AddOrDelIgnore(addServer(name)) GILUpdateUI(true) end
 			
@@ -45,13 +44,13 @@ Menu.ModifyMenu("MENU_UNIT_PLAYER", function(owner, menuButton, contextData)
 		else
 			info.text = L["RCM_6"]
 		end	
-				
+
 		menuButton:CreateButton(info.text, info.func)
-		
+
 	elseif (which and (which == "PLAYER" or which == "RAID_PLAYER" or which == "PARTY" or which == "TARGET")) then
-		
+
 		local target, server = UnitName(unit or "target")
-			
+
 		if server then
 			if server == "" then
 				addServer(target)
@@ -59,43 +58,41 @@ Menu.ModifyMenu("MENU_UNIT_PLAYER", function(owner, menuButton, contextData)
 				target = target .. "-"..server
 			end
 		end
-		
+
 		target = Proper(target, true)
-		
-		-- DropDownList1.numButtons = max(0, DropDownList1.numButtons - 1)
-	
+
 		local info = UIDropDownMenu_CreateInfo()
 		info.text = ""
 		info.notCheckable = true
 		info.disabled = true
 		menuButton:CreateButton(info.text, info.func)
-	
+
 		local info = UIDropDownMenu_CreateInfo()
 		info.dist = 0
 		info.notCheckable = 1
-		
+
 		if name and name == RAID_TARGET_ICON then
 			info.func = function() AddOrDelNPC("") GILUpdateUI(true) end
-				
+
 			if (hasNPCIgnored(target) > 0) then
 				info.text = L["RCM_4"]
 			else
 				info.text = L["RCM_6"]
 			end
-	
+
 		else
 			info.func = function() C_FriendList.AddOrDelIgnore(addServer(target)) GILUpdateUI(true) end
-			
+
 			if (hasGlobalIgnored(addServer(target)) > 0) then
 				info.text = L["RCM_4"]				
-				
+
 			else
 				info.text = L["RCM_6"]
 			end	
 		end
-		
+
 		menuButton:CreateButton(info.text, info.func)
-		
+
 		local info = UIDropDownMenu_CreateInfo()
 		info.text = L["RCM_5"]
 		info.dist = 0
