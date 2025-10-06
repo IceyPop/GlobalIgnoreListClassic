@@ -1,3 +1,4 @@
 package.bat
 GlobalIgnoreList.toc
 GlobalIgnoreList-BCC.toc
+*.zip
