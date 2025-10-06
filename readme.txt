@@ -249,6 +249,14 @@ The following commands are accessible by typing /gignore or /gi in the chat box:
 
 => VERSION HISTORY
 
+=> 11.2.0.5
+
+MrFIXIT was gracious enough to take on the task of doing some code reorganization that was very critically needed.  Thank you so much!
+
+Fixed a sync bug introduced with the same server sync option
+
+Fixed a bug with the guild invite ignore
+
 => 11.2.0.4
 
 The retail and classic code is now one in the same!  This will make managing releases so much easier and we can expect that the classic version will no longer lag behind the retail version.  As a result both the retail and classic versions will now use the same version number which will be based on the retail wow version.
