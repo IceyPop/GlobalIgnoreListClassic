@@ -9,7 +9,7 @@ Global Ignore also gives you full access to its chat filtering engine so you can
 * Ability to ignore players, NPCs, monsters, and entire servers
 * Ability to set notes for ignored entries, and expiration times for automatic removal from ignore
 * Chat spam filtering with robust chat spam filter editor, allowing players to create their own custom filters.
-* Default spam filters catch the majority of gold sellers and spammers (defaults for English servers) including gold spam, Guild recruitment, community invites, Asian languages, and so on.
+* Default spam filters catch the majority of gold sellers and spammers (defaults for English servers) including gold spam, Guild recruitment, community invites, Asian languages, political spam, and so on.
 * Warnings to prevent inviting or being a member of a group with a player on your ignore list
 * Automatic decline of duels and party invites from ignored players
 * Greatly improved UI over the default
@@ -18,11 +18,13 @@ Global Ignore also gives you full access to its chat filtering engine so you can
 
 Type /gi in game for chat help, or open your ignore list for features and options
 
-**NOTES AND KNOWN ISSUES:**
+**NOTES, ISSUES AND FREQUENT QUESTIONS:**
+
+* Unfortunately I cannot add guild-wide ignores.  Blizzard does not supply guild information with the chat data and they've limited the ability for addons to collect their own data on guilds (Census addons were causing server lag).  If I can find a way to do it properly in the future I will try to add it in.
 
 * There is a bug where WoW sometimes reports all members of the ignore list as "Unknown" during login which prevents GIL from synchronizing your character ignore lists. If this happens, GIL will print a message duing login and then attempt to synchronize when you open the GIL UI. You can also force a sync by a chat command line.
 
-* There is an issue where WoW reports the wrong server name when ignoring someone from right clicking chat. When a character with no server name is reported, GIL will search the members of your current raid, battlegroud, instance, and so on to try to find someone with that name. It wlll check your chat tab history and search for any reference of the name in order to determine the server. If no data is found during this search, GIL will ultimately assume the person is on your server.
+* There is an issue where WoW reports the wrong server name when ignoring someone from right clicking chat. When a character with no server name is reported, GIL will search the members of your current raid, battleground, instance, and so on to try to find someone with that name. It will check your chat tab history and search for any reference of the name in order to determine the server. If no data is found during this search, GIL will ultimately assume the person is on your server.
 
 * Account wide ignore only works for up to 50 accounts per character due to a WoW limitation. GIL uses logic to select the "best" 50 players on a per-character basis, in an attempt to maximize usefulness of account wide ignore limitations. No other ignore addon can do this. This is significant because it prevents you from messages, duel requests, being grouped in a dungeon, BG, or LFR queue system for not only their main character but for their alts that you don't know about too. GIL will also perform all of those same checks and warnings for non-account wide ignore. 
 
@@ -113,6 +115,36 @@ This tag allows filters to be created to filter out community Join requests.
 No other data is used for this tag; If you wish to filter anything that
 contains a Join request, simply include this tag
 
+**[trade]**
+
+This tag allows filters to be created to filter out tradeskill links.
+No other data is used for this tag; If you wish to filter anything that
+contains a tradeskill link, simply include this tag.
+
+**[journal]**
+
+This tag allows filters to be created to filter out dungeon journal links.
+No other data is used for this tag; If you wish to filter anything that
+contains a journal link, simply include this tag.
+
+**[mount]**
+
+This tag allows filters to be created to filter out mount links.
+No other data is used for this tag; If you wish to filter anything that
+contains a mount link, simply include this tag.
+
+**[guild]**
+
+This tag allows filters to be created to filter out guild links.
+No other data is used for this tag; If you wish to filter anything that
+contains a guild link, simply include this tag.
+
+**[outfit]**
+
+This tag allows filters to be created to filter out outfit links.
+No other data is used for this tag; If you wish to filter anything that
+contains an outfit link, simply include this tag.
+
 **[nonlatin]**
 
 This tag allows filters messages that contain Chinese/Japanese/Korean characters
@@ -131,6 +163,39 @@ This tag allows filters to test that a line of text sourced from a specific chan
 number.  For example, channel 1 would be zone, 2 would be city/trade, and so on.  If
 you wanted a filter to apply only to trade chat you could do "[channel=2]" somewhere
 in your filter.
+
+**[chname=name]**
+
+This tag allows filters to test that a line of text sourced from a specific channel
+name.  When the text sourced from a channel that does not have a chat channel name
+GIL will set the name to a value that corresponds to the type of chat it is, as
+follows:  say, yell, whisper, officer, guild, party, raid, raid_leader,
+instance_chat, instance_chat_leader, battleground, battleground_leader.
+
+As with other filter tags paces must be escaped with the backslash character. For
+example to create a filter that only applies to Trade chat you would use a tag with
+the spaces escaped: [chname=Trade\ -\ City].  If want to apply a filter only to guild
+chat you would use [chname=guild].
+
+The "Never filter party, guild, yourself, private messages" options still apply here,
+so if those are enabled even a filter with a channel name will not apply to those
+channels as they are configured to never be filtered.
+
+**SPECIAL CHARACTERS IN FILTERS**
+
+Spaces can be used in a [Contains] tag by escaping the character using a forward
+slash before the space (\).  Other characters can be escaped the same
+way: parenthesis (), brackets [], and backslash.  For example:
+
+  [contains=filter\ this]
+
+Here are some other examples:
+
+   \( would mean (
+   \) would mean )
+   \[ would mean [
+   \] would mean ]
+   \\ would mean \
 
 **USING LOGICAL EVALUATION:**
 
@@ -158,7 +223,7 @@ The following commands are accessible by typing /gignore or /gi in the chat box:
 
 /gi list [days] - Show a list of all players on the global ignore list, along with their server, faction, and the date they were added to the list.  An optional number of days can be added if you'd like to only show people who have been on the list for [days] or more days
 
-/gi clear - Clear the global ignore list.  Please understand that clearing this list means that you are clearing everything on all characters that you've previous logged in as!  You will need to provide a follow up confirmation command before the clear will work
+/gi clear - Clear the global ignore list.  Please understand that clearing this list means that you are clearing everything on all characters that you've previous logged in as!  You will need to provide a follow up confirmation command before the clear will work.  This is a tricky command and most likely needs to be done on every character you have otherwise GIL will keep trying to add/remove people to the list when you login to other characters.
 
 /gi add player_name - This provides a way to add a player to the list, but the Blizzard UI and /ignore works too!  You can optionally add a reason as well.  If a server name is involved all spaces should be removed.  For example: /gi add mytoon-Area52 this is an ignore reason
 
@@ -184,40 +249,224 @@ The following commands are accessible by typing /gignore or /gi in the chat box:
 
 => VERSION HISTORY
 
-=> 1.13.10
+=> 11.2.0.4
+
+The retail and classic code is now one in the same!  This will make managing releases so much easier and we can expect that the classic version will no longer lag behind the retail version.  As a result both the retail and classic versions will now use the same version number which will be based on the retail wow version.
+
+Fixed a bug that was allowing some messages to show even when they were supposed to be disabled during login/synchronization.
+
+Added option to disable same-faction syncing to the account wide ignore list to the GUI options
+
+GIL now automatically declines guild invites from people on ignore, to go along with its duel and party invite declines.  I actually thought it already did this but someone pointed out it did not, so thank you!
+
+=> 11.2.0.3
+
+Added a "Prune" button to the ignore list to remove entries by the length of time they were in the list.  Previously this was only available using a chat command and not by using the GUI.
+
+When doing the prune button, I noticed the option to turn off synchronization messages was also only a chat command, so I added that to the GUI options.
+
+=> 11.2.0.2
+
+Fixed some issues with chat filtering tags which completely broke filtering.  This was introduced by some behind the scenes changes Blizzard made to how wow sends chat data.
+
+Added Russian translation. Credits to ZamestoTV for the work, thank you so much!
+
+=> 11.2.0.1
+
+Added new option to disable the ignore response that Global Ignore sends when a person is on ignore list.  Keep in mind that players who are on the Blizzard ignore list will still get an ignore response.  This is response is built into WoW, not part of Global Ignore
+
+Added new option to adjust the GUI window priority.  For example, some people have noticed that commands like /raidinfo show under the UI as the UI defaults to "DIALOG" level priority.  Changing this to MEDIUM will cause the raidinfo window to have a higher priority and show on top of the UI.
+
+=> 11.2.0
+
+Updated for new season 3 of TWW!
+
+=> 11.0.2.7
+
+Added new [chname=name] tag where name is the channel name that you want the filter to apply to. Reminder that spaces must be escaped with the backslash character for example [chname=Trade\ -\ City].  Text that does not have a channel will still have a channel name set as follows: say, yell, whisper, officer, guild, party, raid, raid_leader, instance_chat, instance_chat_leader, battleground, battleground_leader.
+
+Added new option to filter repeated messages in chat.  This is off by default but if enabled it will block players who spam the same message over and over again so long as it was within the last 50 messages processed.
+
+=> 11.0.2.6
+
+Added an option to "Never filter yourself" to the Chat Filtering options panel
+
+=> 11.0.2.5
+
+Fixed a small bug in the chat filtering
+
+=> 11.0.2.4
+
+Added an [outfit] tag to filter out outfit links.
+
+Updated the readme.txt and the CurseForge page to include the latest tags.
+
+After a few people have asked, I have created a "Buy me a Coffee" page if you like my addon and would like to buy be a coffee:
+https://buymeacoffee.com/missiceypop
+
+=> 11.0.2.3
+
+Fixed a bug with UI updating when using the ignore button
+
+The right click menu in the GIL ignore list UI now works again to allow editing notes, setting expirations, etc
+
+=> 11.0.2.2
+
+You can now ignore group leaders again directly from the LFG menu by right clicking their group
+
+Fixed a bug where the ignore list UI wasn't updating correctly when using the Remove Ignore button
+
+=> 11.0.2.1
+
+Added icon in addons list and added entry into addons compartment
+
+=> 11.0.2
+
+Bugfixes and more UI stuff working again
+
+=> 11.0.0
+
+Updated for The War Within pre-patch.  Some UI features are not yet working in this release (such as LFG tool hacks)
+
+=> 10.1.7
+
+Updated for latest WoW release
+
+Renamed GUI function
+
+=> 10.1.5
+
+Updated for latest WoW release
+
+Added anchor nil check recommended by Hollo6 for LFG list frame error
+
+=> 10.0.7.2
+
+Attempted (?) to fix a bug with M+ input when creating a group without SMS/Authenticator without breaking any other hacks.
+
+=> 10.0.7.1
+
+Fixed bug in Chat filter editor list where it would sometimes not display the filters correctly when selecting/scrolling the list
+
+Added new default filter to filter out Power Leveling sellers
+
+Fixed a bug when ignoring NPCs using the Unit Menu
+
+The Options tab now is a scrolling window so that more options can be added!
+
+Added a new section called User Interface options which now allows UI hacks to be enabled or disabled for those that experience issues with them.
+
+There is now an option to disable the ignore list synchronization warning message when it fails during login
+
+=> 10.0.7
+
+Updated for new patch
+
+Disabled all UI hacks temporarily because a few people are reporting problems that I cannot reproduce.  I am planning to add them back in the next update probably with an option to disable them in the settings for those who may have issues.
+
+=> 10.0.5.5
+
+Fixed issues with LFG tool, requiring completely reworked right click ignore menu and other changes
+
+=> 10.0.5.4
+
+GIL is now integrated into the LFG tool GUI for Raids and M+
+
+LFG groups whose leader is on your ignore list will be listed with a red font color.  Thanks to wildmandnd for the suggestion and a first crack at how to do it!
+
+GIL will now show that the LFG tool leader is ignored in the tooltip when you mouse over the listing
+
+GIL will now show the ignored player's note in the LFG tool's tooltip when you mouse over a listing
+
+When right clicking a listing in the LFG tool, you will now see the Leader's name and the option to ignore or remove them
+
+=> 10.0.5.3
+
+Added a "Blocked" column to the chat filter editor which shows the number of times the filter has blocked something without editing the filter.  Thanks to xruptor for inspiring me to add this in finally.
+
+Blocked count and overall blocked count now update in real-time when the chat filter tab is open.  You can watch the filter blocked count climb on a busy server if you get sick of watching paint dry!
+
+Added a new default filter for "Tradeskill sellers" to filter out tradeskill spam.  This is off by default.
+
+Removed the default gold seller filters as they no longer seem to be relevant.
+
+Added some more text into the localization
+
+When sync default chat filters is enabled, filters will now be added, removed and updated as the default changes automatically.  If you disable a default filter with syncing on, it will not be reenabled but they will still update.
+
+=> 10.0.5.2
+
+Added new [journal] tag to filter all boss links for Dungeon/Raid journal
+
+Added new [guild] tag to filter all guild links
+
+Added new [trade] tag to filter all tradeskill links
+
+Added new [mount] tag to filter all mount links
+
+All new tags (journal, guild, trade, and mount) are included in the [link] filter which makes things like the Anal spam filter better (or any filter that uses link tag)
+
+Added new default Mythic+ Seller filter which is disabled by default
+
+Added new IDs to the default filters, so that defaults can be added, removed, and updated in the future based on community feedback.
+
+Reverted the UI strata back to "DIALOG" from "MEDIUM".  Added extra checking in filtering to handle invalid link formats, and other minor changes.
+
+GIL now detects the current WOW version (which is why the classic version isn't updated alongside this release).  I will be experimenting with one single GIL version that works with everything in the future.
+
+=> 10.0.5.1
+
+Now filters "Unknown friend response" error message during login
+
+Additional checks for invalid character names
+
+Updated to use proper C_PartyInfo references used by latest API
+
+=> 10.0.2.1
+
+Updated for Dragonflight
+Fixed UI crashes
+Changed strata of UI from DIALOG to MEDIUM to provide better layering with other UI elements
+
+=> 9.0.5.2
 
 Fixed the prune function which could cause the game to freeze for a period of time if there were ignored NPCs or guilds on the global ignore list
 
-=> 1.13.9
+=> 9.0.5.1
 
-Created dual-TOC to support both TBC and Vanilla classic versions
+Some players have reported an error where the Blizzard ignore list seems to be returning a blank value for a person on the ignore list so I've put a check in to try to prevent issues when that happens.
 
-=> 1.13.8
+=> 9.0.5
 
-Removed the debug printing to the chat window that I accidentally left in the last version
-Updated TOC for version 1.13.7
+Updated for 9.0.5 version
+Increased max failed sync attempts to 2 instead of 1 before removing a character.  At some point occasional failures started happening and this aggressively low number could cause characters to be prematurely removed.
+Increased the max length of a chat filter to 1000 characters, up from 500.  Someone actually hit that limit for a chat filter!
 
-=> 1.13.7
+=> 9.0.3
 
-Fixed a bug that caused an issue when selecting "Target" after right clicking a name in chat
+Updated for Shadowlands live patch
+Fixed issue with Copy Character Name causing an error
+Attempted to improve performance on system message processing that could cause some micro stuttering with super larger ignore lists
 
-=> 1.13.6
+=> 9.0.2
 
-Fixed a bug that was caused when right clicking someone on the Blizzard ignore list created when Blizzard changed their API name.
+Added filter for American Politics (disabled by default)
+Added some German translations by LadyBellaSilver
+Forgot to update the version in the TOC for the last release!
 
-=> 1.13.5
+=> 9.0.1
 
-Updated for 1.13.5 patch
+Updated for 9.0.1.  This is a first attempt after taking a good break from WoW, so there could be some issues.
 
-When receiving system messages it was sometimes possible to experience micro-studdering.  This was fixed in the retail version a while back but was never fixed in classic version until now.
+=> 8.2.5.1
 
-=> 1.13.3
+Added Chinese localization.  Thank you for the translation help: Translated by 堕落治疗
 
-Updated for the 1.13.3 battleground patch
+=> 8.2.5
 
-When receiving chat channel invites, GIL will now filter out the channel invite spam in the chat window.  When combined with turning on "Block chat channel invites" in Social options it means that you will never see any chat channel invite windows or text ever.
+Updated for 8.2.5
 
-=> 1.13.2
+=> 8.2.2
 
 Swapped the create and remove filter button in the chat filter editor, and added a confirmation dialog box when a filter is requested to be removed
 
@@ -231,7 +480,434 @@ Added the ability to disable or enable filtering of private messages.  This opti
 
 Updated the default "Anal" spam filter to utilize the words count, to address people who do not link a spell or item and instead type the name
 
-=> 1.13.1
+=> 8.2.1
 
-First classic version based on 8.2.0 retail release
 Added option to never apply spam filters to Guild chat.  This option is turned on by default in the options tab.
+
+=> 8.2.0
+
+Fixed a residual 8.1 issue that was causing GIL to fail to remove players on synchronization
+
+Updated to 8.2
+
+=> 8.1.4
+
+Spaces can now be used in a [Contains] tag by escaping the character similar to parenthesis, brackets, and backslashes ie "[contains=Filter\ This]"
+
+=> 8.1.3
+
+More updates related to the annoying undocumented changes Blizzard made in 8.1
+
+=> 8.1.2
+
+Fixed Blizzard UI ignore button and chat command for ignore which was broken by the 8.1 update
+
+=> 8.1.1
+
+Added a new UI hack to work around Blizzard's new "feature" that no longer creates ignore events when you're at 50 ignores and you try to ignore by right clicking chat.
+
+=> 8.1.0
+
+Updated for WOW 8.1
+
+=> 8.0.3
+
+Changed the way the Synchronization list works on login.  In the past there was a lot of strange things going on to avoid some WoW bugs but I am hoping those have been fixed now.  The worst that could happen is you may get more messages that the list could not Synchronize on login.
+
+Changed the way some of the message filtering works upon login to hopefully make things slightly cleaner.
+
+Major changes when adding people to ignore by right clicking chat.  WoW has a bug where it sometimes does not report the server name which causes almost all complaints with the addon. I reported it during Legion but it was not fixed for BFA and I was not in Beta to know before release.  So now whenever GIL gets an add/remove ignore request without a server name, it will search the members of your current group, raid, battleground, and current chat tab text for any evidence of the person.  If a reference to their name is found it will use that server. This was a lot of work and there may be issues so please be aware that this version could either be buggy or it could fix all known issues in a single swoop lol :)
+
+=> 8.0.2
+
+GIL will now pop up a dialog box to warn you when an ignored player joins a party you are in, or you join a party with an ignored player.  This dialog box will automatically close after 15 seconds if it is not closed before that since people can join in mid-combat.
+
+GIL will print a warning and list of players to the chat window if you join a party with ignored players, or if an ignored player joins a party you're already in.
+
+Fixed a bug which could cause the ignore functions to not work properly when ignoring from the party frames
+
+Fixed a bug that could cause the "You are inviting an ignored person to your party" confirmation box to not display when inviting by typing a chat command
+
+=> 8.0.1
+
+Added a new tag [community] which can be used to block Community Join requests in chat.  A new default filter has been created for this, but it will default to being turned off.
+
+By request: Added a new tag [nonlatin] which can be used to block Japanese/Chinese/Korean language.  This was requested to add the functionality of another addon called "BlockChinese" by Ketho.  If you're not interested in all of the features of GIL and just want the Chinese blocking, be sure to check out their addon!  Added a default spam filter to do this, but it will be disabled by default.
+
+Filters can now include brackets and parenthesis in the contains and word tags but prefixing them with a forward slash.
+
+Updated the default Guild Recruitment filter to be better at doing its job
+
+=> 8.0.0
+
+Updated for Battle for Azeroth expansion
+
+=> 7.1.4
+
+GIL was not filtering the "Instance" chat channel
+
+=> 7.1.3
+
+GIL now has a "sync" chat command to force the ignore list to synchronize.  IE: /gi sync
+
+If the ignore list is unavailable for synchronization during login, GIL will now detect it, print a message, and attempt to automatically sync the ignore list whenever the GUI is opened.
+
+Filters now can be enabled or disabled within the filter editor
+
+Added new filter for guild recruitment spam which defaults to being turned off.  If you want to use it, edit the filter and turn it on in the filters tab.
+
+More localization work completed
+
+Updated for 7.3 release
+
+=> 7.1.2
+
+Ignored players who attempt to invite you to a group will now be automatically declined by GIL even when not on the account wide ignore list
+
+Ignored players who attempt to duel you will now be automatically declined by GIL even when not on the account wide ignore list
+
+Players are now given a warning and confirmation box when sending party invites to an ignored player
+
+Fixed some issues when ignoring by right clicking on a target frame or raid frame which could cause GIL to ignore the target instead of the right clicked person.
+
+Minor localization work
+
+=> 7.1.1
+
+Updated default spam filters
+
+Fixed a problem where the Test button in the filter editor was not case insensitive, causing some tests to report the wrong result
+
+Added a help button into the filter editor for the filter box
+
+=> 7.1.0
+
+Updated default spam filter
+Fixed a problem where NPCs with inconsistant casing in their names would not be properly be ignored
+
+=> 7.0.6
+
+Fixed a problem where a filter that had an error in it could cause all chat to not be filtered
+
+Updated default spam filters
+
+=> 7.0.5
+
+Fixes problems with shift click linking
+
+=> 7.0.4
+
+Updates to default spam filters
+
+Completely redid the Spam Filter editor!  So many shiny new things:
+
+When editing a spam filter, the total number of spammers blocked by that filter will now be shown
+
+Reworked the Filter input box in the filter editor to allow for a larger input area
+
+Cleaned up the display of the filters in the Chat Spam tab so they do not wrap down to the next line.
+
+Added a chat link resolover where items can be linked into the box and converted into a GIL tag
+
+Shift clicking any chat link inside the Spam Filter box will automatically insert a GIL tag for that particular item, spell, achievement, pet, etc.
+
+Added an awesome filter testing system built right into the Spam Filter editor!  You can now enter examples of chat text and press the Test button to test applications of the filter you're building.  It will also tell you if it thinks there is an error in your filter.
+
+=> 7.0.3
+
+Added the [talent] tag to the spam filter and into [link] tag
+
+=> 7.0.2
+
+Accidentally left some debug stuff turned on
+
+Fixed a typo which could have caused some issues on startup
+
+=> 7.0.1
+
+Added a new [icon] tag that can be used to evaluate raid icons
+
+Added a new [pet] tag that can be used to evaluate battlepet links in chat
+
+Rewrote the word matching to fix many situations where the word matching would fail, such as when icons and words were used together like {star}test{star}.  GIL will now see "test" as its own word even though its sandwitched in between two icons with no space.  The same works for all link types (spells, items, achievements, etc)
+
+Statistical tracking for the various chat filters is now completely accurate.  In the past it was overestimating a bit.
+
+Now should use about 250% less memory when under high stress and overall less CPU cycles in general
+
+Added some more startup code to try to work around the "Unknown" problem with WoW's API.  This problem could have caused the ignore list to get deleted, or the addon not to load
+
+=> 7.0.0
+
+Updated for new expansion and pre-patch 7.0!
+
+Added some more code to hopefully prevent the "Unknown" problem in non English languages.
+
+Words will now have punctuation stripped from the end of them before applying the word-matching chat filters to them
+
+=> 6.2.19
+
+Added back in the old startup code which seemed to better prevent things from turning bad better than the new approach whenever Blizzard's API returns Unknown for everyone
+
+Updated default spam filters to fix a typo
+
+=> 6.2.18
+
+This update adds some new default spam filters.  I sat on a high pop server in Orgrimmar and created filters until I saw no spam.  I blocked 1283 spammers during that time!
+
+=> 6.2.17
+
+Fixed a bug in the chat filter system which could cause an error when certain items are linked
+
+=> 6.2.16
+
+Fixed a typo in a variable name that could allow "Unknown" characters to be added to the ignore list and maybe other unknown things.
+
+=> 6.2.15
+
+Fixed an conflict with some other addons which could cause some errors since the 6.2.12 release
+
+=> 6.2.14
+
+Changed the way the addon starts up.  This may end up causing problems but it also may end up fixing a problem that a couple people seem to have with the latest couple of versions.  If anyone experiences problems please let me know so that they can be addressed!
+
+When editing a spam filter, GIL will now always save the contents of the editor when the Save Filter button is clicked, even if you haven't pressed ENTER yet.
+
+New option to "Automatically Synchronize Default Spam Filters" will create or update your spam filters to include all of the latest default spam filters.  I will be creating new default filters as I encounter spammers that are not already covered.
+
+=> 6.2.13
+
+Just a small update that may or may not fix an error someone seems to be getting
+
+=> 6.2.12
+
+I've begun doing some more localization work, starting with German but that is not in this version.  I hope to have it done by the 7.0 patch update.  If anyone would like to help with a translation please let me know.
+
+Added a chat spam filter system that allows you to define your own chat filters so that only exactly what you want to filter is filtered!  This of course can be disabled if it is not desired.
+
+Completely revamped all of the code to be much cleaner and easy to work with
+
+=> 6.2.11
+
+Removed the "Attach window to friends list UI" option because it wasn't very useful and some found its reason to be confusing
+
+Removed the ability to disable chat filtering
+
+When responding with the "You are being ignored" message, GIL was sending one message "You are being ignored" message back to the person on ignore for each chat tab you had.  If you had many tabs, it would basically spam the person you have on ignore! :P  This has been fixed so it only sends the message once.
+
+I hope to have fixed an EPIC bug that was prevent the addon for filtering chat on some servers that have two or more words in their name.
+
+Added a server name translator for all US/EU servers to make the server name column look pretty, instead of things like "Theforgottencoast" you should now see "The Forgotten Coast".
+
+=> 6.2.10
+
+Redesigned the way GIL detects deleted characters when maintaining the account-wide ignore list.  This is a big improvement over the old system assuming there are no quirks!
+
+=> 6.2.9
+
+Relaxed the automatic character deleted removal from the ignore list, just in case there are quirks after someone mentioned weirdness.
+
+Began work on the spam filtering but I've disabled it for now until its in better shape.  But you'll still see the tab in the UI for now.
+
+=> 6.2.8
+
+Fixed problem where a person could still show up in chat when on the same server and with a larger ignore list size.  I broke this during the UI revamp but wasn't able to get to it do to holidays.  Sorry everyone.
+
+=> 6.2.7
+
+The /gi npc chat command can now remove NPCs by list number
+
+The GIL UI ignore list wasn't always being updated when ignoring NPCs and entire servers.  These quirks should be fixed now.
+
+=> 6.2.6
+
+GIL can now track character name changes and characters who've been deleted from the *account wide* ignore list.  Players will be added added to and removed from the Global ignore list as expected when these situations are identified.  Blizzard doesn't have a mechanism for this type of tracking within addons, so GIL does it own historical tracking to determine these things.  Because of this, it may take a couple of logins before GIL decides to take certain actions against certain character names.
+
+Added a new option to toggle off name change and deletion tracking just in case anyone wants it to work like it did before this version.  But this option may go away in the future if the new system is a hit.
+
+GIL now filters "Player is already ignored" messages for the first 60 seconds of login
+
+Fixed some bugs that could cause the GIL UI list not to be updated when adding/removing players
+
+=> 6.2.5
+
+Fixed a error that would occur after setting the default expiration using the Options tab (chat command still worked).  If you've changed it from the default 0 value then please double check the value again after installing this version, as GIL may reset the value if it was stored incorrectly in the settings by the previous version.
+
+=> 6.2.4
+
+The "Open/attach window with Blizzard Ignore list" options were always set to true regardless of what you changed it to.  It should now work as expected.
+
+=> 6.2.3
+
+NPCs can now be added and removed from Ignore by clicking on their portraits!
+
+Renamed "server" chat option to "sameserver" and better described what it actually does
+
+GIL can now ignore entire servers.  Use /gi server servername to add or remove a server by name or list number
+
+GIL now responds with a "You are being ignored" message in cases when WoW itself will not.
+
+Fixed a small display bug on the ignore list UI
+
+NEW GUI!  By default the new GUI opens with the Friends/Ignore list but this can be changed in the options.  The GUI can also be started by typing /gi gui in chat too.
+
+=> 6.2.2
+
+Fixed a bug with removing players using right click on their portrait
+
+Added a filter for the "You can't ignore more players" message but I was not able to properly test this.
+
+=> 6.2.1
+
+Localization!  All text has been localized, which means that GIL can be translated to languages other than English!  I will need volunteers though, as I only speak English and broken Spanish.
+
+Possibly fixed some weirdness with right clicking a portrait to ignore
+
+Extended the amount of time GIL filters the "ignore" messages on login to 60 seconds, up from 15.  This should help with any spam some people would randomly get during login but be aware all ignore messages will be filtered for the first 1 minute of each login
+
+You can now set expiration time using list numbers instead of name.  So /gi expire 40 365 will expire the 40th person on the /gi list after 365 days.
+
+=> 6.2.0
+
+Updated for Patch 6.2
+
+=> 6.1.8
+
+Right clicking a target UI and selecting "set focus" was causing an error.  Focus worked when using /focus or hotkey or macro, but not from the unit right click menu.  I had to completely redo the way the target ignore option works but it should be fixed.
+
+Fixed a bug when attempting to ignore by typing /ignore with a current target
+
+=> 6.1.7
+
+By request, the list chat command now shows the reason/notes for each player if there is one
+
+=> 6.1.6
+
+GIL can now optionally ask you for the ignore note when a person is ignored.  This is on by default but it can be turned off by with /gi asknote off and turned on with /gi asknote on
+
+The right click menu in the ignore UI now has a "Reset expiration" option
+
+Pressing enter while editing the ignore note now does the same thing as the Save button
+
+Pressing escape while editing the ignore note now does the same thing as the Cancel button
+
+Pressing enter while editing the expiration days now does the same thing as the Save button
+
+Pressing escape while editing the expiration days now does the same thing as the Cancel button
+
+=> 6.1.5
+
+/gi add now checks the current target and will ignore them if there is no player name supplied
+
+/gi npc now checks the current target and will ignore it if there is no NPC player supplied
+
+=> 6.1.4
+
+The speed of the screen updating when scrolling around the ignore list UI has been greatly improved
+
+GIL now ignores the "Player not found" chat messages for 10 seconds after GIL is loaded, instead of the first 10 seconds after login
+
+GIL can now ignore non player characters (NPC and monsters) yells, emotes, says, tells, and party chat
+
+New command /gi npc npcname adds or removes an NPC character from the ignore list.  Example: "/gi npc snurk bucksquick"
+
+New /gi list option "NPC" will show a list of all ignored NPC characers.  Here are some examples of the list command:
+
+	"/gi list"  List all characters on global ignore list
+	"/gi list npc"  List all NPC characters on global ignore list
+	"/gi list 30"  List all characters on ignore list from 30 days or more
+	"/gi list server"  List all characters ignored from the current server
+	"/gi list Area52" List all characters ignored from the Area 52 server
+
+=> 6.1.3
+
+An "Ignore" option is now added to the targeted player menu while in a Raid group
+
+An "Ignore" option is now added to the targeted player menu while in a party
+
+GIL now has an automated expiration system which allows players to be automatically removed after a specified number of days.  This can be set using the UI or chat commands, and a default value for all newly added ignored players can be set too!
+
+"/gi defexpire days" can now be used to set the number of days that newly ignored players will remain on the list before they are automatically removed.
+
+"/gi expire character days" sets the number of days in which the character should remain on the list.  So for example "/gi expire mytoon 30" will set character mytoon to be automatically removed after being on the list for 30 days.
+
+Right clicking in the ignore tab UI now brings up a drop down menu that allows the note to be edited, the expiration days to be set, or the person to be removed from the list.  Double clicking still provides a quick way to set their note.
+
+The /ignore and /gi add commands now allow a note and expiration days to be supplied.  A simple /ignore works as it always has, but now you can also supply the days after the name followed by a note.  Here are some examples:
+
+	"/ignore mytoon" This will ignore mytoon with the default configured expiration time
+	"/ignore mytoon 30" This will ignore mytoon with a 30 day expiration time
+	"/ignore mytoon this person is mean!"  This will ignore mytoon and set their note to "This person is mean!"
+	"/ignore mytoon 30 this person is mean!" This will ignore mytoon, removing them after 30 days, and setting their note to "this person is mean"
+
+GIL has now been tested and fixed to work with multiple language character sets and unicode/high ASCII characters!
+
+GIL now longer shows "You can't ignore more players" when ignoring a character when the list is larger than the Blizzard maximum
+
+GIL will no longer show itself adding characters during each login when the list is larger than the Blizzard maximum number of ignores
+
+GIL should no longer spam your chat window with "Removing Unknown" on some occasions during login
+
+GIL will now filter out the ignore "Player not found" message from chat during the first 10 seconds of logging in
+
+=> 6.1.2
+
+The ignore by clicking on portraits option had to be scaled back due to Blizzard blocking the add-on when it attempts to modify Blizzard's internal menus.  This happened during dismissing pets, preventing hunters from dismissing until they disabled the addon.  The ignore feature is still there and works, but it just always says "Ignore" now, and serves to toggle the state of ignore for that person.  Better than nothing I suppose, but not as nice as it was.
+
+=> 6.1.1
+
+/gil now works same as /gi and /gignore
+
+The /gignore add and /ignore functions can now specify a reason for ignore, for example 
+"/ignore mytoon-Area52 this person is annoying".  If a server has a space in the name just leave the space out.
+
+The default ignore list UI now shows the days a person has been in the ignore list
+
+The default ignore list UI now shows the reason/note in the ignore list
+
+Double clicking on a character name in the ignore list UI allows the note to be edited
+
+Mousing over a name in the ignore list UI now shows a tooltip with character name, faction, how long they've been ignored, their note/reason, etc.
+
+/gi ignore now does the same as /gi add 
+
+/gi delete now does the same thing as /gi remove
+
+Right clicking a target portait now gives an "Ignore" option in the option list
+
+=> 6.1.0
+
+Updated for new 6.1 patch.  I'm also working on some UI stuff too for future versions but progress has been slow mostly due to raiding! :)
+
+=> 6.0.4
+The /gi list command will now round the number of days a person has been on the ignore list to the nearest whole number
+
+If you try to ignore yourself, you will now get a message telling you that you can't!
+
+GIL should now be able to ignore login and logout messages even when you have more than 50 people on your ignore list!
+
+The /gi list command now assigns a number to each person in the list and the /gi remove command can now remove people by number making things much easier when you have to deal with people using special characters in their name.  Removing by name should still work too!
+
+=> 6.0.3
+Added a chat filtering option which (if enabled) will filter chat messages and remove people on the ignore list if a message from them is found.  This allows a way to get around the 50 player ignore limit per character!  This feature will be on my default but it can be turned off by typing /gi filter off.
+
+=> 6.0.2
+When ignoring a player by right clicking their name in chat and selecting ignore on a server that has a space in the server name, the addon would fail to synchronize and ignore the player.  Sorry :(
+
+The gi list chat command can now have the server name passed to it.  Here are some examples:
+
+/gi list : Shows all people on the ignore list
+/gi list 90 : Shows a list of all people on the list for 90 or more days
+/gi list Area 52 : Shows a list of all people on the list from server Area 52
+/gi list server : Shows a list of all people on the list on the current server
+
+=> 6.0.1
+The list command now shows the number of days the person has been on the ignore list instead of a date
+
+The list command now optionally can take a number of days and it will only list players on ignore for that many days or longer.  For example "/gi list 30" would list only people who have been on the list for 30 or more days while "/gi list" would show all people on the list.
+
+Added a new command called prune.  This will allow you to remove people in bulk who have been ignored for a specified number of days.  For example "/gi prune 30" removes all people who have been ignored for 30 or more days.
+
+
+=> 6.0.0
+First release of Global Ignore List
