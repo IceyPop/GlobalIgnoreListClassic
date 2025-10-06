@@ -1,4 +1,5 @@
 package.bat
 GlobalIgnoreList.toc
 GlobalIgnoreList-BCC.toc
+GIL_InputScrollFrameTemplate.xml
 *.zip

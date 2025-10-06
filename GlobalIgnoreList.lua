@@ -535,9 +535,8 @@ function M.SyncIgnoreList (silent)
 				local tmp = M.removeServer(name, true)
 				
 				if (tmp ~= "") and (tmp ~= UNKNOWN) then
-				
-					name = M.Proper(M.addServer(name))
-
+					name = M.Proper(M.addServer(C_FriendList.GetIgnoreName(count)))
+					
 					if M.hasGlobalIgnored(name) == 0 then
 						added = added + 1
 						
@@ -587,16 +586,22 @@ function M.SyncIgnoreList (silent)
 			BlizzardDelIgnoreByIndex(count)
 		end
 		
+		name = M.removeServer(name, true)
+		
+		--print ("DEBUG got name=" .. name)
+		
 		if (name ~= nil and name ~= "" and name ~= UNKNOWN) then
-			name = M.Proper(M.addServer(name))
+			name = M.Proper(M.addServer(C_FriendList.GetIgnoreName(count)))
 			
 			local globIdx = M.hasGlobalIgnored(name)
+
+			--print ("DEBUG got ignore position=" .. globIdx .. " for "..name)
 			
 			if globIdx == 0 then
 				if GlobalIgnoreDB.trackChanges == true then
 			
 					local idx = hasDeleted(name)
-				
+					
 					if idx == 0 then
 						M.debugMsg ("New player "..name.. " found on character, adding to Global Ignore List")
 						skipRemove = true
@@ -652,7 +657,7 @@ function M.SyncIgnoreList (silent)
 		
 				local name = M.Proper(M.addServer(value))
 				
-				print("DEBUG processing: ".. name .. " ignored? ".. hasIgnored(name));
+				--print("DEBUG processing: ".. name .. " ignored? ".. hasIgnored(name));
 				
 				if hasIgnored(name) == 0 then
 					local ok = (GlobalIgnoreDB.factionList[key] == faction) or (GlobalIgnoreDB.samefaction == false)

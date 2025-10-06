@@ -1,5 +1,13 @@
 => VERSION HISTORY
 
+=> 11.2.0.7
+
+Didn't really fix the sync issue that I thought I did yesterday after finding more time to test today, so its fixed now!
+
+=> 11.2.0.6
+
+Accidentally left debug stuff on in the last version.
+
 => 11.2.0.5
 
 MrFIXIT was gracious enough to take on the task of doing some code reorganization that was very critically needed.  Thank you so much!
