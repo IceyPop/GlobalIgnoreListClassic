@@ -155,7 +155,7 @@ end
 function M.GIL_HookFunctions()
 	-- /script Menu.PrintOpenMenuTags()
 	
-	if GlobalIgnoreDB.useLFGHacks == true and V.wowIsMOP then
+	if GlobalIgnoreDB.useLFGHacks == true and (V.wowIsMOP or V.wowIsRetail) then
 		hooksecurefunc("LFGListSearchEntry_Update", M.GIL_LFG_Update)
 		hooksecurefunc("LFGListSearchEntry_OnEnter", M.GIL_LFG_Tooltip)
 		
