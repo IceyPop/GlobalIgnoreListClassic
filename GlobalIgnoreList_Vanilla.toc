@@ -3,6 +3,7 @@
 ## Notes: Maintain ignore list across all characters, filter chat spam and more
 ## Author: IceyPop
 ## Version: 11.2.7.0
+## Category: Chat & Communication
 ## SavedVariables: GlobalIgnoreDB
 ## SavedVariablesPerCharacter: GlobalIgnoreImported
 
