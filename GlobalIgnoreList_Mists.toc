@@ -1,8 +1,8 @@
-## Interface: 50500, 50501
+## Interface: 50500, 50501, 50502
 ## Title: Global Ignore List (Classic)
 ## Notes: Maintain ignore list across all characters, filter chat spam and more
 ## Author: IceyPop
-## Version: 11.2.5.0
+## Version: 11.2.7.0
 ## SavedVariables: GlobalIgnoreDB
 ## SavedVariablesPerCharacter: GlobalIgnoreImported
 

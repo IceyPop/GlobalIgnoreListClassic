@@ -1,4 +1,3 @@
--- WORK IN PROGRESS: Move everything to its own namespace
 local addonName, addon = ...
 -- get a reference to localization entries
 local L = addon.L
@@ -14,34 +13,53 @@ local M = addon.M
 ----------------------
 
 function M.GILDUMP (o)
-   if type(o) == 'table' then
-      local s = '{ '
-      for k,v in pairs(o) do
-         if type(k) ~= 'number' then k = '"'..k..'"' end
-         s = s .. '['..k..'] = ' .. M.GILDUMP(v) .. ','
-      end
-      return s .. '} '
-   else
-      return tostring(o)
-   end
+	if type(o) == 'table' then
+		local s = '{ '
+		
+		for key, value in pairs(o) do
+			if type(key) ~= 'number' then
+				key = '"'..key..'"'
+			end
+			s = s .. '['..key..'] = ' .. M.GILDUMP(value) .. ','
+		end
+		
+		return s .. '} '
+	else
+		return tostring(o)
+	end
 end
 
 function M.GILDUMP2 (tbl, indent)
-  if not indent then indent = 0 end
-  local formatting
-  for k, v in pairs(tbl) do
-    formatting = string.rep("  ", indent) .. k .. ": "
-    if type(v) == "table" then
-      print(formatting)
-      M.GILDUMP2(v, indent+1)
-    elseif type(v) == 'boolean' then
-      print(formatting .. tostring(v))
-	elseif type(v) == 'function' then
-	  print(formatting .. "function")
-    else
-      print(formatting .. v)
-    end
-  end
+	if not indent then
+		indent = 0
+	end
+
+	local formatting
+	
+	for key, value in pairs(tbl) do
+		formatting = string.rep("  ", indent) .. key .. ": "
+		if type(value) == "table" then
+			print(formatting)
+			M.GILDUMP2(value, indent + 1)
+		elseif type(value) == 'boolean' then
+			print(formatting .. tostring(value))
+		elseif type(value) == 'function' then
+			print(formatting .. "function")
+		else
+			print(formatting .. value)
+		end
+	end
+end
+
+function M.popWord (str, ch)
+
+	local idx = string.find(str, ch, 1, true)
+	
+	if idx == nil then
+		return "", str
+	end
+	
+	return string.sub(str, 1, idx - 1), string.sub(str, idx + 1)
 end
 
 function M.trim (str)
@@ -450,7 +468,7 @@ V.wowIsCata			= false
 V.wowIsMOP			= false
 V.wowIsRetail		= false
 V.wowLongName		= "Unknown"
-V.wowName				= V.wowLongName
+V.wowName			= V.wowLongName
 
 -- Color yellow: ffff0000
 -- Color white: ffffff00
