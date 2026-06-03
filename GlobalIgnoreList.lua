@@ -8,9 +8,9 @@ local M = addon.M -- shared methods
 
 V.GIL_Loaded			= false
 V.GIL_SyncOK			= false
-V.GIL_SyncTried		= false
+V.GIL_SyncTried			= false
 V.GIL_InSync			= false
-V.lastFilterError	= false
+V.lastFilterError		= false
 
 local GILFRAME			= nil
 local gotLoaded			= false
@@ -58,7 +58,7 @@ local BlizzardInviteUnit		= nil
 
 function M.debugMsg (msg)
 --	if GlobalIgnoreDB.showIgnoreDebug == true then
---		print("|cffffff00Global Ignore: " .. msg)
+		--print("|cffffff00Global Ignore: " .. msg)
 --	end
 end
 
@@ -511,16 +511,16 @@ local function isValidList()
 		for count = 1, C_FriendList.GetNumIgnores() do
 			str = M.removeServer(C_FriendList.GetIgnoreName(count), true)
 
-			if str ~= nil and str ~= UNKNOWN then
+			if str ~= nil and str ~= _G.UNKNOWN then
 				break
 			end
 				
 			found = found + 1
 		end
  			
-		if str == nil or str == UNKNOWN then
+		if str == nil or str == _G.UNKNOWN then
 			if GlobalIgnoreDB.showWarning == true then
-				M.ShowMsg(format(L["LOAD_5"], found, UNKNOWN))
+				M.ShowMsg(format(L["LOAD_5"], found, _G.UNKNOWN))
 			end
 					
 			return false
@@ -536,9 +536,10 @@ function M.SyncIgnoreList (silent)
 		silent = false
 	end
 	
-	M.ShowMsg(L["LOAD_4"])
-
+	M.ShowMsg(L["LOAD_4"])	
+	
 	if isValidList() == false then
+		M.debugMsg ("Invalid ignore list")	
 		return
 	end
 	
@@ -555,7 +556,9 @@ function M.SyncIgnoreList (silent)
 		if (ignores > 0) and (silent == false) then
 			M.ShowMsg(L["LOAD_2"])
 		end
-			
+
+		M.debugMsg ("First time import, ignore size ".. ignores)
+		
 		for count = 1, ignores do
 			
 			name = C_FriendList.GetIgnoreName(count)
@@ -564,7 +567,7 @@ function M.SyncIgnoreList (silent)
 			
 				local tmp = M.removeServer(name, true)
 				
-				if (tmp ~= "") and (tmp ~= UNKNOWN) then
+				if (tmp ~= "") and (tmp ~= _G.UNKNOWN) then
 					name = M.Proper(M.addServer(C_FriendList.GetIgnoreName(count)))
 					
 					if M.hasGlobalIgnored(name) == 0 then
@@ -620,7 +623,7 @@ function M.SyncIgnoreList (silent)
 		
 		--print ("DEBUG got name=" .. name)
 		
-		if (name ~= nil and name ~= "" and name ~= UNKNOWN) then
+		if (name ~= nil and name ~= "" and name ~= _G.UNKNOWN) then
 			name = M.Proper(M.addServer(C_FriendList.GetIgnoreName(count)))
 			
 			local globIdx = M.hasGlobalIgnored(name)
@@ -680,6 +683,8 @@ function M.SyncIgnoreList (silent)
 	local ignoreCount = C_FriendList.GetNumIgnores()
 	
 	if ignoreCount < maxIgnoreSize then
+
+		M.debugMsg("Moving characters from GIL to Ignore")
 
 		for key,value in pairs(GlobalIgnoreDB.ignoreList) do
 		
@@ -1030,7 +1035,7 @@ local function ApplicationStartup(self)
 
 	loadedTime = GetTime()
 		
-	M.SyncIgnoreList(GlobalIgnoreDB.chatmsg == false)
+	--M.SyncIgnoreList(GlobalIgnoreDB.chatmsg == false)
 		
 	V.GIL_Loaded = true
 	
@@ -2453,7 +2458,7 @@ C_FriendList.AddIgnore = function(name, noNote)
 	name	   = M.Proper(M.addServer(name))
 	
 	local tmp = M.removeServer(name, true)
-	if (tmp == "") or (tmp == UNKNOWN) then return end
+	if (tmp == "") or (tmp == _G.UNKNOWN) then return end
 		
 	if M.Proper(M.addServer(UnitName("player"))) ~= name then
 	
@@ -2540,7 +2545,7 @@ C_FriendList.DelIgnore = function(idxpos, isGIL)
 	V.needSorted = true
 	name 	   = M.Proper(M.addServer(name))
 	
---	if M.removeServer(name, true) ~= UNKNOWN then
+--	if M.removeServer(name, true) ~= _G.UNKNOWN then
 
 		--addDeleted(name)
 	
@@ -2661,7 +2666,7 @@ C_FriendList.AddOrDelIgnore = function(name)
 	
 	name = M.Proper(M.addServer(name))
 	
-	if M.removeServer(name, true) == UNKNOWN then return end
+	if M.removeServer(name, true) == _G.UNKNOWN then return end
 
 	local index = M.hasGlobalIgnored(name)
 

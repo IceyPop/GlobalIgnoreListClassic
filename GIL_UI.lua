@@ -1232,8 +1232,7 @@ local function CreateUIFrames()
 	icon:SetPoint("TOPLEFT", -5, 7)
 	icon:SetTexture("Interface\\FriendsFrame\\Battlenet-Portrait")
 	
-	local Tab1Button = CreateFrame("Button", "GILTab1", MainFrame, C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate")
-
+	local Tab1Button = CreateFrame("Button", "GILTab1", MainFrame, "CharacterFrameTabButtonTemplate")
 	
 	Tab1Button:SetPoint("TOPLEFT", MainFrame, "BOTTOMLEFT", 20, 1)
 	Tab1Button:SetText(L["TAB_1"])
@@ -1249,7 +1248,7 @@ local function CreateUIFrames()
 			PanelTemplates_SetTab(MainFrame, 1)
 		end)
 
-	local Tab2Button = CreateFrame("Button", "GILTab2", MainFrame, C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate")
+	local Tab2Button = CreateFrame("Button", "GILTab2", MainFrame, "CharacterFrameTabButtonTemplate")
 
 	Tab2Button:SetPoint("LEFT", "GILTab1", "RIGHT", -16, 0)
 	Tab2Button:SetText(L["TAB_2"])
@@ -1265,7 +1264,7 @@ local function CreateUIFrames()
 			PanelTemplates_SetTab(MainFrame, 2)
 		end)
 		
-	local Tab3Button = CreateFrame("Button", "GILTab3", MainFrame, C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate")	
+	local Tab3Button = CreateFrame("Button", "GILTab3", MainFrame, "CharacterFrameTabButtonTemplate")	
 	
 	Tab3Button:SetPoint("LEFT", "GILTab2", "RIGHT", -16, 0)
 	Tab3Button:SetText(L["TAB_3"])

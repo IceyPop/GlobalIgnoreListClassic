@@ -33,7 +33,7 @@ function M.GIL_GetPlaystyleString (playstyle, activityInfo)
 end
 
 function M.GIL_LFG_Refresh()
-	if V.wowIsERA == true then return end
+	if V.wowIsERA == true or V.wowIsTBC then return end
 
 	if LFGListFrame.SearchPanel ~= nil and LFGListFrame.SearchPanel:IsShown() then
 		LFGListSearchPanel_UpdateResults(LFGListFrame.SearchPanel)

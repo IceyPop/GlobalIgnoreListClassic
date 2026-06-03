@@ -1,5 +1,9 @@
 => VERSION HISTORY
 
+=> 11.2.7.1
+
+Updated for Burning Crusade Anniversary
+
 => 11.2.7
 
 Updated for latest retail and era versions
